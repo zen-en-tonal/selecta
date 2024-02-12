@@ -2,7 +2,7 @@ import { Lens } from "./lens.ts";
 
 export type Scalar = number | string | boolean | null | undefined;
 
-export type Named<T> = {
+type Named<T> = {
   [K in string]: T;
 };
 
