@@ -2,13 +2,10 @@ export interface Lens<T, V> {
   get(x: T): V;
 }
 
-export function recordLens<
-  T extends Record<K, V>,
-  K extends string | number | symbol,
-  V
->(key: keyof T): Lens<T, V | undefined> {
+type Keys = string | number | symbol;
+export function recordLens<V>(key: Keys): Lens<Record<Keys, V>, V | undefined> {
   return {
-    get: (x: T) => {
+    get: (x: Record<Keys, V>) => {
       if (!x) return undefined;
       return x[key];
     },
