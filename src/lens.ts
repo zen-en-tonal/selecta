@@ -2,6 +2,19 @@ export interface Lens<T, V> {
   get(x: T): V;
 }
 
+export function recordLens<
+  T extends Record<K, V>,
+  K extends string | number | symbol,
+  V
+>(key: keyof T): Lens<T, V | undefined> {
+  return {
+    get: (x: T) => {
+      if (!x) return undefined;
+      return x[key];
+    },
+  };
+}
+
 class Combine<T extends Lens<A, B>, Q extends Lens<B, C>, A, B, C>
   implements Lens<A, C>
 {
