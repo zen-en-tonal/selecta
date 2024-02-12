@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.215.0/assert/mod.ts";
-import { combine, recordLens } from "./lens.ts";
+import { combine, lens } from "./lens.ts";
 import { prism, Scalar } from "./prism.ts";
 
 Deno.test("prism", () => {
@@ -10,11 +10,8 @@ Deno.test("prism", () => {
     },
   };
 
-  const addressCodeLens = combine(
-    recordLens("address"),
-    recordLens<Scalar>("code")
-  );
-  const nameLens = recordLens<Scalar>("name");
+  const addressCodeLens = combine(lens("address"), lens<Scalar>("code"));
+  const nameLens = lens<Scalar>("name");
   const p = prism({
     addressCode: addressCodeLens,
     userName: nameLens,

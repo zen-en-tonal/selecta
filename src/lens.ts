@@ -3,7 +3,7 @@ export interface Lens<T, V> {
 }
 
 type Keys = string | number | symbol;
-export function recordLens<V>(key: Keys): Lens<Record<Keys, V>, V | undefined> {
+export function lens<V>(key: Keys): Lens<Record<Keys, V>, V | undefined> {
   return {
     get: (x: Record<Keys, V>) => {
       if (!x) return undefined;
