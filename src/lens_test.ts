@@ -65,3 +65,18 @@ Deno.test(
     assertEquals(combination.get(nested), undefined);
   }
 );
+
+Deno.test("lens array", () => {
+  const data = [
+    {
+      post: { title: "a" },
+    },
+    {
+      post: { title: "b" },
+    },
+  ];
+
+  const postsLens = combine(lens("post"))(lens("title"));
+
+  assertEquals(postsLens.get(data), ["a", "b"]);
+});
