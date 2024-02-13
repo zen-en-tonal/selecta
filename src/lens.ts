@@ -6,9 +6,9 @@ export type Key = string | number | symbol;
 export type Scalar = number | string | boolean | undefined;
 export type Record = { [K in Key]: Record | Scalar };
 
-export function lens<T extends Record>(key: Key): Lens<T, Record | Scalar> {
+export function lens(key: Key): Lens<Record, Record | Scalar> {
   return {
-    get: (x: T) => {
+    get: (x: Record) => {
       if (!x) return undefined;
       return x[key];
     },
@@ -20,9 +20,9 @@ function isScalar(x: any): x is Scalar {
   return x && typeof x !== "object";
 }
 
-export function focus<T extends Record>(
-  lens: Lens<T, Record | Scalar>
-): Lens<T, Scalar> {
+export function focus(
+  lens: Lens<Record, Record | Scalar>
+): Lens<Record, Scalar> {
   return {
     get: (x) => {
       const v = lens.get(x);
