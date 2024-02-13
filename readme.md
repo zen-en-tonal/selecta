@@ -30,7 +30,6 @@ console.table(prism(json));
 ├────────────────┼────────────────────────┤
 │ artists        │ "Sub Focus"            │
 │ title          │ "Siren / Solar System" │
-│ price          │ 23.56                  │
 │ average_rating │ 4.92                   │
 └────────────────┴────────────────────────┘
 ```
