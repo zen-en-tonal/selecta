@@ -25,6 +25,9 @@ Deno.test("fromScheme", () => {
     name: "name",
     address: {
       code: "code",
+      contary: {
+        street: "toms diner",
+      },
     },
     another: {
       field: "hi",
@@ -35,6 +38,9 @@ Deno.test("fromScheme", () => {
     name: "userName",
     address: {
       code: "addressCode",
+      contary: {
+        street: "street",
+      },
     },
     invaild: "invaild",
     another: "another",
@@ -43,6 +49,7 @@ Deno.test("fromScheme", () => {
   assertEquals(p, {
     userName: "name",
     addressCode: "code",
+    street: "toms diner",
     invaild: undefined,
     another: undefined,
   });
