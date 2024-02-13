@@ -23,11 +23,14 @@ const resp = await fetch(url);
 const json = await resp.json();
 
 console.table(prism(json));
+```
+```console
 ┌────────────────┬────────────────────────┐
 │ (idx)          │ Values                 │
 ├────────────────┼────────────────────────┤
 │ artists        │ "Sub Focus"            │
 │ title          │ "Siren / Solar System" │
+│ price          │ 23.56                  │
 │ average_rating │ 4.92                   │
 └────────────────┴────────────────────────┘
 ```
