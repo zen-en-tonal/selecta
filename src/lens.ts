@@ -2,26 +2,39 @@ export interface Lens<T, V> {
   get(x: T): V;
 }
 
-type Keys = string | number | symbol;
-export function lens<V>(key: Keys): Lens<Record<Keys, V>, V | undefined> {
+export type Key = string | number | symbol;
+export type Scalar = number | string | boolean | undefined;
+export type Record = { [K in Key]: Record | Scalar };
+
+export function lens<T extends Record>(key: Key): Lens<T, Record | Scalar> {
   return {
-    get: (x: Record<Keys, V>) => {
+    get: (x: T) => {
       if (!x) return undefined;
       return x[key];
     },
   };
 }
 
-class Combine<T extends Lens<A, B>, Q extends Lens<B, C>, A, B, C>
-  implements Lens<A, C>
-{
-  constructor(private t: T, private q: Q) {}
-
-  get(x: A): C {
-    return this.q.get(this.t.get(x));
-  }
+// deno-lint-ignore no-explicit-any
+function isScalar(x: any): x is Scalar {
+  return x && typeof x !== "object";
 }
 
-export function combine<T, Q, R>(x: Lens<T, Q>, other: Lens<Q, R>): Lens<T, R> {
-  return new Combine(x, other);
+export function focus<T extends Record>(
+  lens: Lens<T, Record | Scalar>
+): Lens<T, Scalar> {
+  return {
+    get: (x) => {
+      const v = lens.get(x);
+      return isScalar(v) ? v : undefined;
+    },
+  };
+}
+
+export function combine<T, Q>(
+  self: Lens<T, Q>
+): <R>(other: Lens<Q, R>) => Lens<T, R> {
+  return (other) => ({
+    get: (x) => other.get(self.get(x)),
+  });
 }

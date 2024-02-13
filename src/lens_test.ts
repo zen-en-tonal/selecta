@@ -13,9 +13,9 @@ Deno.test("combine lenses", () => {
     get: (x: typeof nested): typeof nested.address => x.address,
   };
   const codeLens = { get: (x: typeof nested.address): string => x.code };
-  const combined = combine(userAddressLens, codeLens);
+  const combined = combine(userAddressLens)(codeLens);
 
-  assertEquals("code", combined.get(nested));
+  assertEquals(combined.get(nested), "code");
 });
 
 Deno.test("lens", () => {
@@ -28,9 +28,9 @@ Deno.test("lens", () => {
 
   const addressLens = lens("address");
   const addressCodeLens = lens("code");
-  const combination = combine(addressLens, addressCodeLens);
+  const combination = combine(addressLens)(addressCodeLens);
 
-  assertEquals("code", combination.get(nested));
+  assertEquals(combination.get(nested), "code");
 });
 
 Deno.test("lens failed to get value, the value should be undefined.", () => {
@@ -43,9 +43,9 @@ Deno.test("lens failed to get value, the value should be undefined.", () => {
 
   const addressLens = lens("address");
   const addressZipLens = lens("zip"); // undefined key.
-  const combination = combine(addressLens, addressZipLens);
+  const combination = combine(addressLens)(addressZipLens);
 
-  assertEquals(undefined, combination.get(nested));
+  assertEquals(combination.get(nested), undefined);
 });
 
 Deno.test(
@@ -60,8 +60,8 @@ Deno.test(
 
     const postsLens = lens("posts"); // undefined key.
     const addressZipLens = lens("zip"); // undefined key.
-    const combination = combine(postsLens, addressZipLens);
+    const combination = combine(postsLens)(addressZipLens);
 
-    assertEquals(undefined, combination.get(nested));
+    assertEquals(combination.get(nested), undefined);
   }
 );

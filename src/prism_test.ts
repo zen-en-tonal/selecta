@@ -1,6 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.215.0/assert/mod.ts";
-import { combine, lens } from "./lens.ts";
-import { prism, Scalar } from "./prism.ts";
+import { combine, lens, focus } from "./lens.ts";
+import { prism } from "./prism.ts";
 
 Deno.test("prism", () => {
   const nested = {
@@ -10,12 +10,12 @@ Deno.test("prism", () => {
     },
   };
 
-  const addressCodeLens = combine(lens("address"), lens<Scalar>("code"));
-  const nameLens = lens<Scalar>("name");
+  const addressCodeLens = combine(lens("address"))(lens("code"));
+  const nameLens = lens("name");
   const p = prism({
-    addressCode: addressCodeLens,
-    userName: nameLens,
+    addressCode: focus(addressCodeLens),
+    userName: focus(nameLens),
   })(nested);
 
-  assertEquals({ userName: "name", addressCode: "code" }, p);
+  assertEquals(p, { userName: "name", addressCode: "code" });
 });
