@@ -34,6 +34,17 @@ console.table(prism(json));
 └────────────────┴────────────────────────┘
 ```
 
+## Rest API
+
+```console
+deno run -A cmd/serve.ts
+```
+
+```console
+curl -X POST http://localhost:3000 -d '{"data":{"field":"value"},"scheme":{"field":"value"}}'
+{"field":"value"}
+```
+
 ## dev
 
 ### test
