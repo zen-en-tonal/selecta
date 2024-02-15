@@ -50,4 +50,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: zenentonal/subfocus:${{env.GITHUB_REF_NAME}}
+          tags: zenentonal/subfocus:$GITHUB_REF_NAME
