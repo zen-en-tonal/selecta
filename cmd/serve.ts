@@ -1,5 +1,4 @@
-import { Scheme, fromScheme } from "../mod.ts";
-import { Record } from "../src/lens.ts";
+import { Scheme, fromScheme, Record } from "../mod.ts";
 
 const logMiddle = (
   next: (req: Request) => Promise<Response>
