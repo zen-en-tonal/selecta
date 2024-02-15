@@ -7,9 +7,10 @@ WORKDIR /app
 USER deno
 
 COPY deps.ts .
-RUN deno cache deps.ts
+COPY deno.lock .
+RUN deno cache --lock=deno.lock deps.ts
 
 ADD . .
-RUN deno cache cmd/serve.ts
+RUN deno cache --lock=deno.lock cmd/serve.ts
 
 CMD [ "run", "--allow-net", "cmd/serve.ts" ]
