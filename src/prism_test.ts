@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.215.0/assert/mod.ts";
+import { assertEquals } from "../deps.ts";
 import { combine, lens, focus } from "./lens.ts";
 import { prism, fromScheme } from "./prism.ts";
 

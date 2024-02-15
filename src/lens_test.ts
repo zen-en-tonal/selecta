@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.215.0/assert/mod.ts";
+import { assertEquals } from "../deps.ts";
 import { combine, lens } from "./lens.ts";
 
 Deno.test("combine lenses", () => {
