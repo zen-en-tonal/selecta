@@ -54,6 +54,17 @@ export function toNonNull(
   };
 }
 
+export function parseNumber(
+  lens: Lens<Record | Record[], Scalar | Scalar[]>,
+): Lens<Record | Record[], Scalar | Scalar[]> {
+  return {
+    get: (x) => {
+      const v = lens.get(x);
+      return isNaN(v as number) ? v : Number.parseFloat(v as string);
+    },
+  };
+}
+
 export function combine<T, Q>(
   self: Lens<T, Q>,
 ): <R>(other: Lens<Q, R>) => Lens<T, R> {

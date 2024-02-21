@@ -1,4 +1,5 @@
 import { assertEquals } from "../deps.ts";
+import { parseNumber } from "./lens.ts";
 import { combine, focus, lens, toNonNull } from "./lens.ts";
 
 Deno.test("combine lenses", () => {
@@ -88,4 +89,22 @@ Deno.test("toNonNull", () => {
   const l = toNonNull(focus(lens("x")));
 
   assertEquals(l.get(data), "");
+});
+
+Deno.test("parseNumber", () => {
+  const data = {
+    x: "100",
+  };
+  const l = parseNumber(focus(lens("x")));
+
+  assertEquals(l.get(data), 100);
+});
+
+Deno.test("parseNumber null value", () => {
+  const data = {
+    x: undefined,
+  };
+  const l = parseNumber(focus(lens("x")));
+
+  assertEquals(l.get(data), undefined);
 });
