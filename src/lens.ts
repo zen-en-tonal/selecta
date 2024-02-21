@@ -7,7 +7,7 @@ export type Scalar = number | string | boolean | undefined;
 export type Record = { [K in Key]: Record | Scalar };
 
 export function lens(
-  key: Key
+  key: Key,
 ): Lens<Record | Record[], Scalar | Record | (Scalar | Record)[]> {
   return {
     get: (x: Record | Record[]) => {
@@ -33,7 +33,7 @@ function isArray(x: any): x is Array<any> {
 }
 
 export function focus(
-  lens: Lens<Record | Record[], Scalar | Record | (Scalar | Record)[]>
+  lens: Lens<Record | Record[], Scalar | Record | (Scalar | Record)[]>,
 ): Lens<Record | Record[], Scalar | Scalar[]> {
   return {
     get: (x) => {
@@ -43,8 +43,19 @@ export function focus(
   };
 }
 
+export function toNonNull(
+  lens: Lens<Record | Record[], Scalar | Scalar[]>,
+): Lens<Record | Record[], Scalar | Scalar[]> {
+  return {
+    get: (x) => {
+      const v = lens.get(x);
+      return v ?? "";
+    },
+  };
+}
+
 export function combine<T, Q>(
-  self: Lens<T, Q>
+  self: Lens<T, Q>,
 ): <R>(other: Lens<Q, R>) => Lens<T, R> {
   return (other) => ({
     get: (x) => other.get(self.get(x)),

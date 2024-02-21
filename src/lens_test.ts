@@ -1,5 +1,5 @@
 import { assertEquals } from "../deps.ts";
-import { combine, lens } from "./lens.ts";
+import { combine, focus, lens, toNonNull } from "./lens.ts";
 
 Deno.test("combine lenses", () => {
   const nested = {
@@ -63,7 +63,7 @@ Deno.test(
     const combination = combine(postsLens)(addressZipLens);
 
     assertEquals(combination.get(nested), undefined);
-  }
+  },
 );
 
 Deno.test("lens array", () => {
@@ -79,4 +79,13 @@ Deno.test("lens array", () => {
   const postsLens = combine(lens("post"))(lens("title"));
 
   assertEquals(postsLens.get(data), ["a", "b"]);
+});
+
+Deno.test("toNonNull", () => {
+  const data = {
+    x: undefined,
+  };
+  const l = toNonNull(focus(lens("x")));
+
+  assertEquals(l.get(data), "");
 });
