@@ -5,9 +5,9 @@ lens, focus and prism.
 ## example
 
 ```ts
-import { fromScheme } from "../mod.ts";
+import { fromSchema } from "../mod.ts";
 
-const scheme = {
+const schema = {
   artists_sort: "artists",
   title: "title",
   community: {
@@ -16,7 +16,7 @@ const scheme = {
     },
   },
 };
-const prism = fromScheme(scheme);
+const prism = fromSchema(schema);
 
 const url = "https://api.discogs.com/releases/19111147";
 const resp = await fetch(url);
@@ -41,7 +41,7 @@ deno run -A cmd/serve.ts
 ```
 
 ```console
-curl -X POST http://localhost:3000 -d '{"data":{"field":"value"},"scheme":{"field":"value"}}'
+curl -X POST http://localhost:3000 -d '{"data":{"field":"value"},"schema":{"field":"value"}}'
 {"field":"value"}
 ```
 
