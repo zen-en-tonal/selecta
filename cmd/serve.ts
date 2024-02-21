@@ -1,8 +1,8 @@
-import { Scheme, fromScheme, Record } from "../mod.ts";
+import { fromSchema, Record, Schema } from "../mod.ts";
 
 const logMiddle = (
-  next: (req: Request) => Promise<Response>
-): ((req: Request) => Promise<Response>) => {
+  next: (req: Request) => Promise<Response>,
+): (req: Request) => Promise<Response> => {
   return async (req) => {
     const resp = await next(req);
     console.log(`${Date.now()} "${req.method} ${req.url}" ${resp.status}`);
@@ -22,15 +22,15 @@ const health = (_: Request): Response => {
   });
 };
 
-type RequestScheme = {
+type RequestSchema = {
   data: Record;
-  scheme: Scheme;
+  schema: Schema;
 };
 
 const fetchAndParse = async (req: Request): Promise<Response> => {
   try {
-    const { data, scheme } = (await req.json()) as RequestScheme;
-    const spec = fromScheme(scheme)(data);
+    const { data, schema } = (await req.json()) as RequestSchema;
+    const spec = fromSchema(schema)(data);
     return new Response(JSON.stringify(spec));
   } catch (e) {
     if (e instanceof Error) {
@@ -49,5 +49,5 @@ Deno.serve(
     port: 3000,
     hostname: "0.0.0.0",
   },
-  logMiddle(hander)
+  logMiddle(hander),
 );

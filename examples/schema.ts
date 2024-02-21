@@ -1,6 +1,6 @@
-import { fromScheme } from "../mod.ts";
+import { fromSchema } from "../mod.ts";
 
-const scheme = {
+const schema = {
   artists_sort: "artists",
   title: "title",
   lowest_price: "price",
@@ -10,7 +10,7 @@ const scheme = {
     },
   },
 };
-const prism = fromScheme(scheme);
+const prism = fromSchema(schema);
 
 const url = "https://api.discogs.com/releases/19111147";
 const resp = await fetch(url);

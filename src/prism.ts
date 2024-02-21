@@ -16,27 +16,27 @@ export function prism(
   };
 }
 
-export type Scheme = { [K in string]: string | Scheme };
+export type Schema = { [K in string]: string | Schema };
 
 // deno-lint-ignore no-explicit-any
-const isScheme = (x: any): x is Scheme => x && typeof x === "object";
+const isSchema = (x: any): x is Schema => x && typeof x === "object";
 
-type FlattenScheme = { keys: string[]; value: string };
+type FlattenSchema = { keys: string[]; value: string };
 
-function flatScheme(scheme: Scheme): FlattenScheme[] {
-  const leaf = (parents: string[], s: string): FlattenScheme => {
+function flatSchema(schema: Schema): FlattenSchema[] {
+  const leaf = (parents: string[], s: string): FlattenSchema => {
     return { keys: parents, value: s };
   };
-  const node = (parents: string[], s: Scheme): FlattenScheme[] => {
+  const node = (parents: string[], s: Schema): FlattenSchema[] => {
     return Object.entries(s).flatMap(([k, v]) =>
-      isScheme(v) ? node([...parents, k], v) : leaf([...parents, k], v)
+      isSchema(v) ? node([...parents, k], v) : leaf([...parents, k], v)
     );
   };
-  return node([], scheme);
+  return node([], schema);
 }
 
-export function fromScheme(scheme: Scheme): (lay: Record) => Spectrum {
-  const flatten = flatScheme(scheme);
+export function fromSchema(schema: Schema): (lay: Record) => Spectrum {
+  const flatten = flatSchema(schema);
   const obj: { [K in string]: Lens<Record, Scalar> } = {};
   for (const x of flatten) {
     const lenses = x.keys.map((k) => lens(k)).reduce((p, c) => combine(p)(c));

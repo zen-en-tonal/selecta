@@ -1,6 +1,6 @@
 import { assertEquals } from "../deps.ts";
 import { combine, focus, lens } from "./lens.ts";
-import { fromScheme, prism } from "./prism.ts";
+import { fromSchema, prism } from "./prism.ts";
 
 Deno.test("prism", () => {
   const nested = {
@@ -20,7 +20,7 @@ Deno.test("prism", () => {
   assertEquals(p, { userName: "name", addressCode: "code" });
 });
 
-Deno.test("fromScheme", () => {
+Deno.test("fromSchema", () => {
   const nested = {
     name: "name",
     address: {
@@ -34,7 +34,7 @@ Deno.test("fromScheme", () => {
     },
   };
 
-  const p = fromScheme({
+  const p = fromSchema({
     name: "userName",
     address: {
       code: "addressCode",
