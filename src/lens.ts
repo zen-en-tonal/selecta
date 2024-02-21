@@ -8,33 +8,23 @@ export type Record = { [K in Key]: Record | Scalar };
 
 export function lens(
   key: Key,
-): Lens<Record | Record[], Scalar | Record | (Scalar | Record)[]> {
+): Lens<Record, Scalar | Record> {
   return {
-    get: (x: Record | Record[]) => {
+    get: (x: Record) => {
       if (!x) return undefined;
-      if (Array.isArray(x)) return x.map((e) => e[key]);
       return x[key];
     },
   };
 }
 
 // deno-lint-ignore no-explicit-any
-function isScalar(x: any): x is Scalar | Scalar[] {
-  if (isArray(x)) {
-    if (x.length < 1) return true;
-    if (isScalar(x[0])) return true;
-  }
+function isScalar(x: any): x is Scalar {
   return x && typeof x !== "object";
 }
 
-// deno-lint-ignore no-explicit-any
-function isArray(x: any): x is Array<any> {
-  return x && Array.isArray(x);
-}
-
 export function focus(
-  lens: Lens<Record | Record[], Scalar | Record | (Scalar | Record)[]>,
-): Lens<Record | Record[], Scalar | Scalar[]> {
+  lens: Lens<Record, Scalar | Record>,
+): Lens<Record, Scalar> {
   return {
     get: (x) => {
       const v = lens.get(x);
@@ -44,8 +34,8 @@ export function focus(
 }
 
 export function toNonNull(
-  lens: Lens<Record | Record[], Scalar | Scalar[]>,
-): Lens<Record | Record[], Scalar | Scalar[]> {
+  lens: Lens<Record, Scalar>,
+): Lens<Record, Scalar> {
   return {
     get: (x) => {
       const v = lens.get(x);
@@ -55,8 +45,8 @@ export function toNonNull(
 }
 
 export function parseNumber(
-  lens: Lens<Record | Record[], Scalar | Scalar[]>,
-): Lens<Record | Record[], Scalar | Scalar[]> {
+  lens: Lens<Record, Scalar>,
+): Lens<Record, Scalar> {
   return {
     get: (x) => {
       const v = lens.get(x);

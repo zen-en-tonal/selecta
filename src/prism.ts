@@ -1,12 +1,14 @@
-import { lens, Record, Lens, Scalar, combine, focus } from "./lens.ts";
+import { combine, focus, Lens, lens, Record, Scalar } from "./lens.ts";
 
-export type Spectrum = { [K in string]: Scalar | Scalar[] };
+export type Spectrum = { [K in string]: Scalar };
 
-export function prism(lenses: {
-  [K in string]: Lens<Record | Record[], Scalar | Scalar[]>;
-}): (lay: Record | Record[]) => Spectrum {
-  return (lay: Record | Record[]) => {
-    const obj: { [K in string]: Scalar | Scalar[] } = {};
+export function prism(
+  lenses: {
+    [K in string]: Lens<Record, Scalar>;
+  },
+): (lay: Record) => Spectrum {
+  return (lay: Record) => {
+    const obj: { [K in string]: Scalar } = {};
     for (const [k, v] of Object.entries(lenses)) {
       obj[k] = v.get(lay);
     }
@@ -35,7 +37,7 @@ function flatScheme(scheme: Scheme): FlattenScheme[] {
 
 export function fromScheme(scheme: Scheme): (lay: Record) => Spectrum {
   const flatten = flatScheme(scheme);
-  const obj: { [K in string]: Lens<Record, Scalar | Scalar[]> } = {};
+  const obj: { [K in string]: Lens<Record, Scalar> } = {};
   for (const x of flatten) {
     const lenses = x.keys.map((k) => lens(k)).reduce((p, c) => combine(p)(c));
     obj[x.value] = focus(lenses);

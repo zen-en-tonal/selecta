@@ -67,21 +67,6 @@ Deno.test(
   },
 );
 
-Deno.test("lens array", () => {
-  const data = [
-    {
-      post: { title: "a" },
-    },
-    {
-      post: { title: "b" },
-    },
-  ];
-
-  const postsLens = combine(lens("post"))(lens("title"));
-
-  assertEquals(postsLens.get(data), ["a", "b"]);
-});
-
 Deno.test("toNonNull", () => {
   const data = {
     x: undefined,
