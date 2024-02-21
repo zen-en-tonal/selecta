@@ -1,4 +1,13 @@
-import { combine, focus, Lens, lens, Record, Scalar } from "./lens.ts";
+import {
+  combine,
+  focus,
+  Lens,
+  lens,
+  parseNumber,
+  Record,
+  Scalar,
+  toNonNull,
+} from "./lens.ts";
 
 export type Spectrum = { [K in string]: Scalar };
 
@@ -35,12 +44,21 @@ function flatSchema(schema: Schema): FlattenSchema[] {
   return node([], schema);
 }
 
-export function fromSchema(schema: Schema): (lay: Record) => Spectrum {
+export function fromSchema(
+  schema: Schema,
+  options?: Partial<{ parseNumber: boolean; nonNull: boolean }>,
+): (lay: Record) => Spectrum {
   const flatten = flatSchema(schema);
   const obj: { [K in string]: Lens<Record, Scalar> } = {};
   for (const x of flatten) {
     const lenses = x.keys.map((k) => lens(k)).reduce((p, c) => combine(p)(c));
     obj[x.value] = focus(lenses);
+    if (options?.parseNumber) {
+      obj[x.value] = parseNumber(obj[x.value]);
+    }
+    if (options?.nonNull) {
+      obj[x.value] = toNonNull(obj[x.value]);
+    }
   }
   return prism(obj);
 }

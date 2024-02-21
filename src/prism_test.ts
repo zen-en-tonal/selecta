@@ -54,3 +54,34 @@ Deno.test("fromSchema", () => {
     another: undefined,
   });
 });
+
+Deno.test("fromSchema parseNumber", () => {
+  const nested = {
+    value: "0.1",
+    str: "hoge",
+  };
+
+  const p = fromSchema({
+    value: "value",
+    str: "str",
+  }, { parseNumber: true })(nested);
+
+  assertEquals(p, {
+    value: 0.1,
+    str: "hoge",
+  });
+});
+
+Deno.test("fromSchema nonNull", () => {
+  const nested = {
+    str: undefined,
+  };
+
+  const p = fromSchema({
+    str: "str",
+  }, { nonNull: true })(nested);
+
+  assertEquals(p, {
+    str: "",
+  });
+});
