@@ -33,15 +33,15 @@ export function focus(
   };
 }
 
-export function toNonNull(
-  lens: Lens<Record, Scalar>,
-): Lens<Record, Scalar> {
-  return {
+export function unwrapOrDefault(
+  def: Scalar,
+): (lens: Lens<Record, Scalar>) => Lens<Record, Scalar> {
+  return (lens) => ({
     get: (x) => {
       const v = lens.get(x);
-      return v ?? "";
+      return v ?? def;
     },
-  };
+  });
 }
 
 export function parseNumber(

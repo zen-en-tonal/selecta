@@ -6,7 +6,7 @@ import {
   parseNumber,
   Record,
   Scalar,
-  toNonNull,
+  unwrapOrDefault,
 } from "./lens.ts";
 
 export type Spectrum = { [K in string]: Scalar };
@@ -46,19 +46,22 @@ function flatSchema(schema: Schema): FlattenSchema[] {
 
 export function fromSchema(
   schema: Schema,
-  options?: Partial<{ parseNumber: boolean; nonNull: boolean }>,
+  options?: Partial<{ parseNumber: boolean }>,
 ): (lay: Record) => Spectrum {
   const flatten = flatSchema(schema);
   const obj: { [K in string]: Lens<Record, Scalar> } = {};
   for (const x of flatten) {
     const lenses = x.keys.map((k) => lens(k)).reduce((p, c) => combine(p)(c));
-    obj[x.value] = focus(lenses);
+    const { key, d } = parseDefault(x.value);
+    obj[key] = d(focus(lenses));
     if (options?.parseNumber) {
-      obj[x.value] = parseNumber(obj[x.value]);
-    }
-    if (options?.nonNull) {
-      obj[x.value] = toNonNull(obj[x.value]);
+      obj[key] = parseNumber(obj[key]);
     }
   }
   return prism(obj);
 }
+
+const parseDefault = (value: string) => {
+  const [key, def] = value.split(":");
+  return { key, d: unwrapOrDefault(def) };
+};

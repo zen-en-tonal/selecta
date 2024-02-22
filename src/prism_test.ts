@@ -72,16 +72,30 @@ Deno.test("fromSchema parseNumber", () => {
   });
 });
 
-Deno.test("fromSchema nonNull", () => {
+Deno.test("fromSchema default", () => {
   const nested = {
     str: undefined,
   };
 
   const p = fromSchema({
-    str: "str",
-  }, { nonNull: true })(nested);
+    str: "str:default",
+  })(nested);
 
   assertEquals(p, {
-    str: "",
+    str: "default",
+  });
+});
+
+Deno.test("fromSchema default number", () => {
+  const nested = {
+    value: undefined,
+  };
+
+  const p = fromSchema({
+    value: "v:100",
+  }, { parseNumber: true })(nested);
+
+  assertEquals(p, {
+    v: 100,
   });
 });
